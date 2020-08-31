@@ -1,4 +1,14 @@
-﻿/* 3.
+﻿/* 1.
+SELECT * FROM Genre
+*/
+
+/* 2.
+Select * FROM Artist
+ORDER BY ArtistName desc
+
+*/
+
+/* 3.
 SELECT s.Title,
 		a.ArtistName
 	From Song s
@@ -59,6 +69,81 @@ VALUES ('Vietnow', 279, '04/16/1996', 2, 28, 23);
 */
 
 /* 10.
+
+Select s.Title, al.Title, ar.ArtistName
+From Album al
+LEFT JOIN Song s ON al.Id = s.AlbumId
+LEFT JOIN Artist ar on al.ArtistId = ar.Id
+WHERE al.Title LIKE 'Evil Empire'
+
 */
 
-Select 
+/* 11.
+
+Select al.Title, COUNT(s.Title) AS NumberOfSongs
+From Song s
+LEFT JOIN Album al ON al.Id = s.AlbumId
+LEFT JOIN Artist ar on al.ArtistId = ar.Id 
+GROUP BY al.Title
+
+*/
+
+/* 12.
+
+Select ar.ArtistName, COUNT(s.Title) AS NumberOfSongs
+From Song s
+LEFT JOIN Artist ar ON ar.Id = s.ArtistId
+GROUP BY ar.ArtistName
+
+*/
+
+/* 13.
+
+Select g.Label, COUNT(s.Title) AS NumberOfSongs
+From Song s
+LEFT JOIN Genre g ON g.Id = s.GenreId
+GROUP BY g.Label
+
+*/
+
+/* 14.
+
+SELECT COUNT (DISTINCT (al.Label)) AS Labels, ar.ArtistName
+FROM Album al
+LEFT JOIN Artist ar on al.ArtistId = ar.Id
+GROUP BY ar.ArtistName
+HAVING COUNT (DISTINCT (al.Label)) > 1
+
+*/
+
+/* 15.
+
+SELECT Title, AlbumLength as Duration 
+FROM Album
+WHERE AlbumLength in (SELECT MAX(AlbumLength)
+FROM Album)
+
+*/
+
+/* 16
+
+SELECT Title as SongTitle, SongLength as Duration 
+FROM Song
+WHERE SongLength in (SELECT MAX(SongLength)
+FROM Song)
+
+*/
+
+/* .17
+
+SELECT Album.Title as AlbumTitle, Song.Title as SongTitle, SongLength as Duration 
+FROM Song
+LEFT JOIN Album ON Song.AlbumId = Album.Id
+WHERE SongLength in (SELECT MAX(SongLength)
+FROM Song)
+
+*/
+
+
+
+
