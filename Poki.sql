@@ -58,6 +58,7 @@ SELECT SUM(WordCount) FROM Poem
 
 //Really get it
 
+
 SELECT Title, Text, LEN(CAST(Text As nvarchar(max))) as 'CharacterCount'
 FROM Poem
 WHERE LEN(CAST(Text As nvarchar(max))) in (SELECT MIN(LEN(CAST(Text As nvarchar(max))))
@@ -142,8 +143,83 @@ ORDER BY COUNT(p.AuthorId) desc
 */
 
 /* 16.
+
+SELECT COUNT (e.Name) as PoemsOfSadness 
+FROM PoemEmotion pe
+LEFT JOIN Poem p on pe.PoemId = p.Id
+LEFT JOIN Emotion e on pe.EmotionId = e.Id
+WHERE e.Name LIKE 'Sadness'
+
 */
 
+/* 17.a
+//Either
 
+SELECT COUNT(ISNULL(pe.PoemId, 0)) as BereftOfEmotion 
+FROM Poem p
+LEFT JOIN PoemEmotion pe ON p.Id = pe.PoemId
+WHERE pe.PoemId IS NULL
 
+//OR 17.b
 
+SELECT COUNT(1) - COUNT(pe.PoemId) as BereftOfEmotion 
+FROM Poem p
+LEFT JOIN PoemEmotion pe ON p.Id = pe.PoemId
+
+*/
+
+/* 18.
+
+SELECT COUNT(e.Name) as 'Count', e.Name 
+FROM PoemEmotion pe
+LEFT JOIN Poem p on pe.PoemId = p.Id
+LEFT JOIN Emotion e on pe.EmotionId = e.Id
+GROUP BY e.Name
+ORDER BY COUNT(e.Name) asc
+
+*/
+
+/* 19.
+
+SELECT COUNT(e.Name)as 'EmotionCount', e.name, g.Name 
+FROM PoemEmotion pe
+LEFT JOIN Poem p on pe.PoemId = p.Id
+LEFT JOIN Emotion e on pe.EmotionId = e.Id
+LEFT JOIN Author au on p.AuthorId = au.Id
+LEFT JOIN Grade g on au.GradeId = g.Id
+GROUP BY e.Name, g.Name
+HAVING e.NAME LIKE 'JOY'
+ORDER BY COUNT(e.Name) desc
+
+*/
+
+/* 20.a
+
+This way gives only the lowest value, but I can't seem to get the name of the gender out of the inner window
+
+SELECT MIN(EmotionCount.num) 
+FROM (
+SELECT COUNT(e.Name) as num
+FROM PoemEmotion pe
+LEFT JOIN Poem p on pe.PoemId = p.Id
+LEFT JOIN Emotion e on pe.EmotionId = e.Id
+LEFT JOIN Author au on p.AuthorId = au.Id
+LEFT JOIN Gender g on au.GenderId = g.Id
+GROUP BY e.Name, g.Name
+HAVING e.NAME LIKE 'Fear') EmotionCount
+
+//
+This way just puts them in order
+// 20.b
+
+SELECT COUNT(e.Name) as FearLevel, g.Name
+FROM PoemEmotion pe
+LEFT JOIN Poem p on pe.PoemId = p.Id
+LEFT JOIN Emotion e on pe.EmotionId = e.Id
+LEFT JOIN Author au on p.AuthorId = au.Id
+LEFT JOIN Gender g on au.GenderId = g.Id
+GROUP BY e.Name, g.Name
+HAVING e.NAME LIKE 'Fear'
+ORDER BY COUNT(e.Name) asc
+
+*/
